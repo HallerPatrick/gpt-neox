@@ -26,6 +26,7 @@ import numpy as np
 import sentencepiece as spm
 from typing import List, Union
 from .gpt2_tokenization import GPT2Tokenizer
+from .ngme_tokenizer import NGMETokenizer
 
 
 def build_tokenizer(args):
@@ -52,6 +53,8 @@ def build_tokenizer(args):
         tokenizer = HFGPT2Tokenizer(args.vocab_file)
     elif args.tokenizer_type.lower() == "CharLevelTokenizer".lower():
         tokenizer = CharLevelTokenizer(vocab_size=512)
+    elif args.tokenizer_type.lower() == "NGMETokenizer".lower():
+        tokenizer = NGMETokenizer(args.vocab_file)
     else:
         raise NotImplementedError(
             "{} tokenizer is not " "implemented.".format(args.tokenizer_type)
