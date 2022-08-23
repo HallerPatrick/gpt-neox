@@ -6,6 +6,7 @@ TOKENIZER_CHOICES = [
     "HFTokenizer",
     "GPT2BPETokenizer",
     "CharLevelTokenizer",
+    "NGMETokenizer"
 ]
 DATASET_CHOICES = [i for i in DATA_DOWNLOADERS.keys() if i != "pass"]
 

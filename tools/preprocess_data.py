@@ -48,11 +48,16 @@ class Encoder(object):
         ids = {}
         for key in self.args.jsonl_keys:
             doc_ids = []
-            text_ids = Encoder.tokenizer.tokenize(text)
+
+            if self.args.tokenizer_type.lower() == "ngmetokenizer":
+                text_ids = Encoder.tokenizer.tokenize(text)
+                text_ids = Encoder.tokenizer.convert_tokens_to_ids(text_ids)
+            else:
+                text_ids = Encoder.tokenizer.tokenize(text)
             if len(text_ids) > 0:
                 doc_ids.append(text_ids)
-            if self.args.append_eod:
-                doc_ids[-1].append(Encoder.tokenizer.eod)
+            # if self.args.append_eod:
+            #     doc_ids[-1].append(Encoder.tokenizer.eod)
             ids[key] = doc_ids
         return ids, len(text)
 
@@ -89,6 +94,7 @@ def get_args():
             "HFTokenizer",
             "GPT2BPETokenizer",
             "CharLevelTokenizer",
+            "NGMETokenizer"
         ],
         help="What type of tokenizer to use.",
     )
@@ -214,7 +220,13 @@ def main():
         # add each tokenized document / sentence
         for key, sentences in doc.items():
             for sentence in sentences:
-                builders[key].add_item(torch.IntTensor(sentence))
+                if args.tokenizer_type.lower() == "ngmetokenizer":
+                    n_seqs = []
+                    for seq in sentence:
+                        n_seqs.append(torch.IntTensor(seq))
+                    builders[key].add_item(torch.cat(n_seqs))
+                else:
+                    builders[key].add_item(torch.IntTensor(sentence))
             # separate with eos token
             builders[key].end_document()
 
