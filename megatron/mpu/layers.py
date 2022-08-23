@@ -92,6 +92,19 @@ def _initialize_affine_weight_cpu(
     return None
 
 
+def n_hot(t, num_clases):
+    shape = list(t.size())[1:]
+
+    shape.append(num_clases)
+    ret = torch.zeros(shape).to(t.device)
+
+    # Expect that first dimension is for all n-grams
+    for seq in t:
+        ret.scatter_(-1, seq.unsqueeze(-1), 1)
+
+    return ret
+
+
 class VocabParallelEmbedding(torch.nn.Module):
     """Embedding parallelized in the vocabulary dimension.
 
@@ -171,9 +184,11 @@ class VocabParallelEmbedding(torch.nn.Module):
             masked_input[input_mask] = 0
         else:
             masked_input = input_
-            # Get the embeddings.
+            
+        # Get the embeddings.
         output_parallel = F.embedding(
-            masked_input,
+            n_hot(masked_input, self.num_embeddings),
+            # masked_input,
             self.weight,
             self.padding_idx,
             self.max_norm,

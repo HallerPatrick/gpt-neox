@@ -36,6 +36,7 @@ def load_vocab(vocab_file):
 class NGMETokenizer(PreTrainedTokenizer):
 
     vocab_file_name = "vocab.txt"
+    eod = None
 
     def __init__(self, vocab_file: Optional[str] = None, unk_token="<1-UNK>", pad_token="<pad>", **kwargs):
 
