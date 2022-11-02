@@ -96,7 +96,7 @@ def n_hot(t, num_clases):
     shape = list(t.size())[1:]
 
     shape.append(num_clases)
-    ret = torch.zeros(shape).to(t.device)
+    ret = torch.zeros(shape, dtype=torch.int).to(t.device)
 
     # Expect that first dimension is for all n-grams
     for seq in t:

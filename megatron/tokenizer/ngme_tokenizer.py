@@ -101,7 +101,7 @@ class NGMETokenizer(PreTrainedTokenizer):
             ids = []
 
             for token in n_gram_seq:
-                ids.append(self._convert_token_to_id(token, f"<{n+1}-UNK>"))
+                ids.append(self._convert_token_to_id(token, "<unk>"))
             
             n_gram_ids.append(ids)
 

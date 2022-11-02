@@ -6,6 +6,7 @@ from megatron import mpu
 from megatron.model.positional_embeddings import SinusoidalPositionalEmbedding
 from megatron.model.init_functions import get_init_methods
 
+from ngme import NGramsEmbedding
 
 class Embedding(torch.nn.Module):
     """Language model embeddings.
@@ -57,7 +58,8 @@ class Embedding(torch.nn.Module):
                 )
                 raise Exception
         else:
-            self.embedding_module = torch.nn.Embedding
+            # self.embedding_module = torch.nn.Embedding
+            self.embedding_module = NGramsEmbedding
 
         # Position embedding (serial).
         self.use_pos_emb = use_pos_emb
